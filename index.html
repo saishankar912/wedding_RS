@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Rahul & Swetha Wedding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+/* Layout: a full-screen Indian envelope intro, then one long centred scroll:
+   invitation card, countdown, celebrations list (easy to extend), RSVP at the bottom. */
+:root {
+  --cream: #FBF1DC;
+  --parchment: #F3E2BE;
+  --maroon: #6A0F1C;
+  --maroon-deep: #3E0810;
+  --maroon-mid: #84192A;
+  --gold: #B98A3B;
+  --gold-light: #E3C27A;
+  --leaf: #3E6B2E;
+  --ink: #3A1A1A;
+  --ink-soft: #6B4A3F;
+  --display: "Pinyon Script", "Snell Roundhand", cursive;
+  --body: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html.locked, html.locked body { overflow: hidden; height: 100%; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ---------- Envelope intro ---------- */
+.intro {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+  padding: max(24px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background:
+    radial-gradient(ellipse at 50% 40%, #5C0D19 0%, var(--maroon-deep) 70%);
+  overflow: hidden;
+  transition: opacity .9s ease;
+}
+.intro::before {
+  content: ""; position: absolute; inset: 0; opacity: .12; pointer-events: none;
+  background-image:
+    radial-gradient(circle at 12px 12px, var(--gold-light) 1.5px, transparent 2px),
+    radial-gradient(circle at 0 0, var(--gold-light) 1px, transparent 1.5px);
+  background-size: 24px 24px, 24px 24px;
+}
+.intro.leaving { opacity: 0; pointer-events: none; }
+.garlands { position: absolute; inset: 0 0 auto 0; height: 0; pointer-events: none; }
+.strand { position: absolute; top: 0; transform-origin: top center; animation: sway 5s ease-in-out infinite alternate; }
+@keyframes sway { from { transform: rotate(-1.6deg); } to { transform: rotate(1.6deg); } }
+.intro-head { text-align: center; position: relative; }
+.caps { font-size: .8rem; letter-spacing: .28em; text-transform: uppercase; }
+.intro-head .caps { color: var(--gold-light); }
+.intro-names { font-family: var(--display); font-size: clamp(2.6rem, 11vw, 4.2rem); color: var(--cream); line-height: 1.1; margin-top: 6px; }
+
+.env-btn {
+  all: unset; cursor: pointer; display: block; position: relative;
+  width: min(86vw, 520px); aspect-ratio: 3 / 2; perspective: 1400px;
+  margin-top: 8vh;
+  transition: transform 1s ease;
+}
+.env-btn:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 8px; }
+.intro.leaving .env-btn { transform: scale(1.12) translateY(-4%); }
+.env-back, .env-front, .env-flap { position: absolute; left: 0; width: 100%; display: block; }
+.env-back { top: 0; height: 100%; filter: drop-shadow(0 28px 40px rgba(0,0,0,.5)); }
+.env-card {
+  position: absolute; left: 6%; right: 6%; top: 5%; height: 88%; z-index: 2;
+  background: var(--cream); border: 1px solid var(--gold);
+  box-shadow: inset 0 0 0 5px var(--cream), inset 0 0 0 6px var(--gold-light);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px;
+  transition: transform .95s cubic-bezier(.22,.7,.2,1) .75s;
+}
+.env-card .caps { color: var(--maroon); font-size: .62rem; }
+.env-card .nm { font-family: var(--display); color: var(--maroon); font-size: clamp(1.6rem, 7vw, 2.4rem); line-height: 1.1; }
+.env-front { top: 0; height: 100%; z-index: 3; }
+.env-flap {
+  top: 0; height: 56%; z-index: 4; transform-origin: top center;
+  transition: transform .85s ease-in-out, z-index 0s linear .42s;
+}
+.env-seal {
+  position: absolute; left: 50%; top: 56%; width: 28%; aspect-ratio: 1; z-index: 5;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #F2D88F 0%, var(--gold) 55%, #8A6021 100%);
+  box-shadow: 0 4px 10px rgba(0,0,0,.45), inset 0 0 0 3px rgba(255,255,255,.18);
+  display: grid; place-items: center;
+  color: var(--maroon-deep); line-height: 1; text-shadow: 0 1px 0 rgba(255, 255, 255, .45), 0 -1px 0 rgba(0, 0, 0, .22);
+  transition: opacity .35s ease, transform .5s ease;
+}
+.env-btn.open .env-flap { transform: rotateX(180deg); z-index: 1; }
+.env-btn .env-seal { display: flex; align-items: center; justify-content: center; gap: clamp(3px, 1.3vw, 8px); }
+.env-btn .env-seal::before { content: ""; position: absolute; inset: 4%; border-radius: 50%; border: 2px dotted rgba(74, 10, 20, .55); }
+.env-btn .env-seal::after { content: ""; position: absolute; inset: 12%; border-radius: 50%; border: 1px solid rgba(74, 10, 20, .6); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); }
+.env-seal b { position: relative; z-index: 1; font-family: var(--body); font-weight: 700; font-size: clamp(1.5rem, 7.4vw, 2.6rem); line-height: 1; }
+.env-seal i { position: relative; z-index: 1; font-family: var(--body); font-style: italic; font-weight: 600; font-size: clamp(.85rem, 3.5vw, 1.25rem); color: var(--maroon-mid); }
+.env-btn.open .env-card { transform: translateY(-52%); }
+.env-btn.open .env-seal { opacity: 0; transform: translate(-50%, -50%) scale(.5); }
+.tap {
+  color: var(--gold-light); font-style: italic; font-size: 1.15rem; letter-spacing: .04em;
+  animation: pulse 2.2s ease-in-out infinite; position: relative;
+}
+.tap.gone { opacity: 0; animation: none; transition: opacity .3s; }
+@keyframes pulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+
+/* ---------- Main page ---------- */
+main { max-width: 640px; margin: 0 auto; padding-block: 36px 0; }
+.frame {
+  margin: 0 auto; width: min(100%, 560px);
+  padding: 10px; background: var(--parchment);
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 0 5px var(--cream), 0 0 0 6px var(--gold-light), 0 24px 50px rgba(74, 10, 20, .22);
+}
+.frame img { display: block; width: 100%; height: auto; }
+.scroll-btn {
+  position: fixed; z-index: 20;
+  right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(18px, env(safe-area-inset-bottom, 0px));
+  font: inherit; font-size: .85rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 10px; padding: 12px 18px;
+  color: var(--maroon); background: none; border: 0;
+  text-shadow: 0 0 6px var(--cream), 0 0 12px var(--cream); transition: opacity .3s;
+}
+.scroll-btn i { width: 16px; height: 16px; filter: drop-shadow(0 0 4px var(--cream)); border-right: 3px solid var(--maroon); border-bottom: 3px solid var(--maroon); transform: rotate(45deg) translate(0, -2px); animation: nudge 1.6s ease-in-out infinite; }
+@keyframes nudge { 0%, 100% { transform: rotate(45deg) translate(0, -2px); } 50% { transform: rotate(45deg) translate(3px, 1px); } }
+.scroll-btn.hide { opacity: 0; pointer-events: none; }
+.deadline { margin-top: 16px; font-style: italic; color: var(--ink-soft); }
+
+.section { padding-block: 64px 0; text-align: center; }
+.section .caps { color: var(--gold); display: block; }
+.section h2 { font-family: var(--display); font-weight: 400; color: var(--maroon); font-size: clamp(2.3rem, 9vw, 3.1rem); line-height: 1.15; margin-top: 6px; text-wrap: balance; }
+.rule { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px auto 0; width: 180px; }
+.rule::before, .rule::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, transparent, var(--gold)); }
+.rule::after { background: linear-gradient(270deg, transparent, var(--gold)); }
+.rule i { width: 7px; height: 7px; background: var(--gold); transform: rotate(45deg); }
+
+.count { display: flex; justify-content: center; gap: clamp(18px, 6vw, 40px); margin-top: 28px; }
+.unit { min-width: 64px; }
+.unit b { display: block; font-weight: 500; font-size: clamp(2.6rem, 12vw, 3.6rem); line-height: 1; color: var(--maroon); font-variant-numeric: tabular-nums; }
+.unit span { font-size: .78rem; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-soft); }
+.count-note { margin-top: 16px; font-style: italic; color: var(--ink-soft); }
+
+.events { display: grid; gap: 28px; margin-top: 30px; }
+.event {
+  text-align: center; padding: 30px 22px 26px; background: var(--parchment);
+  border: 1px solid var(--gold-light);
+  box-shadow: inset 0 0 0 5px var(--cream), inset 0 0 0 6px var(--gold-light);
+}
+.event .tag { font-size: .78rem; letter-spacing: .26em; text-transform: uppercase; color: var(--gold); }
+.event h3 { font-family: var(--display); font-weight: 400; font-size: clamp(2rem, 8vw, 2.6rem); color: var(--maroon); line-height: 1.15; margin-top: 4px; }
+.event .when { margin-top: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .98rem; }
+.event .time { margin-top: 2px; letter-spacing: .08em; text-transform: uppercase; font-size: .98rem; color: var(--maroon); font-weight: 600; }
+.event .venue { margin-top: 14px; font-weight: 600; }
+.event .addr { color: var(--ink-soft); }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
+.btn {
+  font: inherit; font-size: .92rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 600;
+  display: inline-block; padding: 12px 22px; cursor: pointer; text-decoration: none;
+  border: 1px solid var(--maroon); color: var(--maroon); background: transparent; transition: background .2s, color .2s;
+}
+.btn:hover { background: var(--maroon); color: var(--cream); }
+.btn.solid { background: var(--maroon); color: var(--cream); border-color: var(--maroon); }
+.btn.solid:hover { background: var(--maroon-deep); }
+.more { margin-top: 26px; font-style: italic; color: var(--ink-soft); }
+
+.rsvp-wrap { margin-top: 28px; }
+.rsvp-open { padding: 16px 44px; font-size: 1.05rem; }
+form { text-align: left; margin: 26px auto 0; max-width: 460px; display: grid; gap: 20px; }
+label.field, fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; min-width: 0; }
+.lbl { font-size: .78rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+input[type=text], select, textarea {
+  font: inherit; color: var(--ink); background: var(--parchment); width: 100%;
+  border: 1px solid var(--gold-light); padding: 12px 14px; border-radius: 0;
+}
+textarea { min-height: 96px; resize: vertical; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.choice { position: relative; }
+.choice input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.choice span {
+  display: block; text-align: center; padding: 14px 10px; border: 1px solid var(--gold-light);
+  background: var(--parchment); font-weight: 600; line-height: 1.25;
+}
+.choice input:checked + span { background: var(--maroon); color: var(--cream); border-color: var(--maroon); }
+.choice input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 3px; }
+.err { color: var(--maroon-mid); font-style: italic; min-height: 1.4em; }
+.thanks { margin: 26px auto 0; max-width: 460px; text-align: center; }
+.thanks h3 { font-family: var(--display); font-weight: 400; font-size: 2.2rem; color: var(--maroon); }
+.msgbox { margin-top: 14px; text-align: left; white-space: pre-wrap; background: var(--parchment); border: 1px dashed var(--gold); padding: 14px; font-size: .98rem; overflow-wrap: anywhere; }
+
+footer { text-align: center; padding-block: 70px max(44px, env(safe-area-inset-bottom, 0px)); color: var(--ink-soft); }
+footer .nm { font-family: var(--display); font-size: 2.2rem; color: var(--maroon); display: block; }
+footer .band { height: 10px; margin-top: 34px; background:
+  repeating-linear-gradient(90deg, var(--maroon) 0 14px, transparent 14px 20px, var(--gold) 20px 26px, transparent 26px 32px); opacity: .85; }
+
+@media (prefers-reduced-motion: reduce) {
+  .strand, .tap, .scroll-btn i { animation: none; }
+  .env-card, .env-flap, .env-seal, .env-btn, .intro { transition-duration: .01s; transition-delay: 0s; }
+}
+</style>
+
+</head>
+<body>
+<div class="intro" id="intro">
+  <div class="garlands" id="garlands" aria-hidden="true"></div>
+  <div class="intro-head">
+    <p class="caps">Together with their families</p>
+    <h1 class="intro-names">Rahul &amp; Swetha</h1>
+  </div>
+
+  <button class="env-btn" id="env" type="button" aria-label="Open the wedding invitation">
+    <svg class="env-back" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+      <rect width="300" height="200" fill="#5A0C19"/>
+      <rect x="5" y="5" width="290" height="190" fill="none" stroke="#B98A3B" stroke-width="1" stroke-dasharray="3 3"/>
+    </svg>
+    <div class="env-card">
+      <span class="caps">With joy, we invite you</span>
+      <span class="nm">Rahul &amp; Swetha</span>
+      <span class="caps">2 December 2026</span>
+    </div>
+    <svg class="env-front" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+      <polygon points="0,0 152,112 0,200" fill="#7A1424" stroke="#E3C27A" stroke-width="1.1"/>
+      <polygon points="300,0 148,112 300,200" fill="#7A1424" stroke="#E3C27A" stroke-width="1.1"/>
+      <polygon points="0,200 150,98 300,200" fill="#8A1A2D" stroke="#E3C27A" stroke-width="1.1"/>
+      <polygon points="9,193 150,106 291,193" fill="none" stroke="#B98A3B" stroke-width=".9" stroke-dasharray="2.5 3"/>
+      <polygon points="3,14 3,186 138,112" fill="none" stroke="#B98A3B" stroke-width=".8" stroke-dasharray="2.5 3" transform="translate(4 0)"/>
+      <polygon points="297,14 297,186 162,112" fill="none" stroke="#B98A3B" stroke-width=".8" stroke-dasharray="2.5 3" transform="translate(-4 0)"/>
+    </svg>
+    <svg class="env-flap" viewBox="0 0 300 112" preserveAspectRatio="none" aria-hidden="true">
+      <polygon points="0,0 300,0 150,112" fill="#912034" stroke="#E3C27A" stroke-width="1.3"/>
+      <polygon points="14,5 286,5 150,98" fill="none" stroke="#B98A3B" stroke-width=".9" stroke-dasharray="2.5 3"/>
+    </svg>
+    <span class="env-seal" aria-hidden="true"><b>R</b><i>&amp;</i><b>S</b></span>
+  </button>
+  <p class="tap" id="tap">Tap the envelope to open</p>
+</div>
+
+<main>
+  <div class="frame">
+    <img src="invitation.jpg" width="1055" height="1491" alt="Wedding invitation. Together with their families, Nareddy Rahul Reddy and Lenkala Swetha Reddy request the pleasure of your company as they celebrate their wedding on Wednesday, 2 December 2026. Muhurtham at 10:12 AM, Soaring Heights B&amp;B Venue, 145 Areo Country Road, McKinney, TX 75071.">
+  </div>
+  <button class="scroll-btn" id="scroll-btn" type="button" aria-label="Scroll down"><i aria-hidden="true"></i></button>
+
+  <section class="section" aria-labelledby="count-h">
+    <span class="caps">Counting down</span>
+    <h2 id="count-h">Until the Muhurtham</h2>
+    <div class="rule"><i></i></div>
+    <div class="count" id="count" role="timer" aria-live="off">
+      <div class="unit"><b id="cd-d">0</b><span>Days</span></div>
+      <div class="unit"><b id="cd-h">0</b><span>Hours</span></div>
+      <div class="unit"><b id="cd-m">0</b><span>Minutes</span></div>
+    </div>
+    <p class="count-note">Wednesday, 2 December 2026 · 10:12 AM Central Time</p>
+  </section>
+
+  <section class="section" aria-labelledby="ev-h">
+    <span class="caps">The celebrations</span>
+    <h2 id="ev-h">Join Us</h2>
+    <div class="rule"><i></i></div>
+    <div class="events" id="events"></div>
+    <p class="more">More celebrations will be shared here soon.</p>
+  </section>
+
+  <section class="section" aria-labelledby="rsvp-h" id="rsvp">
+    <span class="caps">Kindly reply</span>
+    <h2 id="rsvp-h">Will You Join Us?</h2>
+    <div class="rule"><i></i></div>
+    <p class="deadline" id="deadline"></p>
+    <div class="rsvp-wrap">
+      <button class="btn solid rsvp-open" id="rsvp-btn" type="button" aria-expanded="false" aria-controls="rsvp-form">RSVP</button>
+      <form id="rsvp-form" hidden novalidate>
+        <label class="field"><span class="lbl">Your name</span>
+          <input type="text" id="rsvp-name" autocomplete="name" placeholder="Full name">
+        </label>
+        <fieldset>
+          <legend class="lbl" style="margin-bottom:6px">Your reply</legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="reply" id="reply-yes" value="yes" checked><span>Joyfully accept</span></label>
+            <label class="choice"><input type="radio" name="reply" id="reply-no" value="no"><span>Regretfully decline</span></label>
+          </div>
+        </fieldset>
+        <label class="field" id="count-field"><span class="lbl">Number of guests, including you</span>
+          <select id="rsvp-count">
+            <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+          </select>
+        </label>
+        <label class="field"><span class="lbl">A note for the couple (optional)</span>
+          <textarea id="rsvp-note" placeholder="Your blessings, dietary needs, or anything we should know"></textarea>
+        </label>
+        <p class="err" id="rsvp-err" role="alert"></p>
+        <button class="btn solid" type="submit" style="justify-self:center;padding:14px 40px">Send my reply</button>
+      </form>
+      <div class="thanks" id="thanks" hidden></div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="nm">Rahul &amp; Swetha</span>
+    <p>With love, the Nareddy and Lenkala families</p>
+    <div class="band" aria-hidden="true"></div>
+  </footer>
+</main>
+
+<script>
+/* ===== Edit these ===== */
+// Digits only, with country code (for example 14695550123). Leave empty to show copy-only RSVP.
+var WHATSAPP_NUMBER = "";
+var WEDDING_START = "2026-12-02T10:12:00-06:00";
+// RSVP closes at this moment (Central Time), for example "2026-11-15T23:59:00-06:00". Leave empty for no deadline.
+var RSVP_DEADLINE = "";
+// Optional link to a response form (such as a Google Form). When set, the RSVP button opens it.
+var RSVP_FORM_URL = "";
+
+// Add more celebrations by copying an entry below (keep the order you want them shown).
+var EVENTS = [
+  {
+    tag: "Muhurtham",
+    title: "The Wedding",
+    couple: "Nareddy Rahul Reddy & Lenkala Swetha Reddy",
+    date: "Wednesday, 2 December 2026",
+    time: "Muhurtham at 10:12 AM",
+    venue: "Soaring Heights B&B Venue",
+    address: "145 Areo Country Road, McKinney, TX 75071",
+    calStart: "20261202T161200Z",
+    calEnd: "20261202T191200Z"
+  }
+];
+/* ====================== */
+
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  root.classList.add("locked");
+
+  /* garlands */
+  var g = document.getElementById("garlands");
+  var cols = ["#E8892B", "#B3202A", "#FFF3DC", "#E3B04B", "#B3202A", "#F0A23A"];
+  function strand(x, n, delay) {
+    var r = 6, step = 11.5, w = 16, h = n * step + 8;
+    var s = '<svg class="strand" style="left:' + x + '%;animation-delay:' + delay + 's" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">';
+    s += '<line x1="8" y1="0" x2="8" y2="' + h + '" stroke="#B98A3B" stroke-width="1"/>';
+    for (var i = 0; i < n; i++) {
+      s += '<circle cx="8" cy="' + (r + 2 + i * step) + '" r="' + r + '" fill="' + cols[i % cols.length] + '" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>';
+    }
+    return s + "</svg>";
+  }
+  var html = "";
+  var specs = [[2, 10], [8, 6], [14, 8], [86, 8], [92, 6], [97, 10]];
+  specs.forEach(function (p, i) { html += strand(p[0], p[1], -i * 0.7); });
+  g.innerHTML = html;
+
+  /* envelope */
+  var intro = document.getElementById("intro");
+  var env = document.getElementById("env");
+  var tap = document.getElementById("tap");
+  var opened = false;
+  function openEnvelope() {
+    if (opened) return;
+    opened = true;
+    env.classList.add("open");
+    tap.classList.add("gone");
+    setTimeout(function () { intro.classList.add("leaving"); }, reduce ? 100 : 2500);
+    setTimeout(function () {
+      intro.hidden = true;
+      root.classList.remove("locked");
+      window.scrollTo(0, 0);
+    }, reduce ? 300 : 3500);
+  }
+  env.addEventListener("click", openEnvelope);
+
+  /* events */
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text) e.textContent = text;
+    return e;
+  }
+  var evBox = document.getElementById("events");
+  EVENTS.forEach(function (ev) {
+    var card = el("article", "event");
+    card.appendChild(el("p", "tag", ev.tag));
+    card.appendChild(el("h3", "", ev.title));
+    if (ev.couple) card.appendChild(el("p", "addr", ev.couple));
+    card.appendChild(el("p", "when", ev.date));
+    card.appendChild(el("p", "time", ev.time));
+    card.appendChild(el("p", "venue", ev.venue));
+    card.appendChild(el("p", "addr", ev.address));
+    var acts = el("div", "actions");
+    var map = el("a", "btn", "Directions");
+    map.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(ev.venue + " " + ev.address);
+    map.target = "_blank"; map.rel = "noopener";
+    var cal = el("a", "btn", "Add to calendar");
+    cal.href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=" + encodeURIComponent(ev.title + " - Rahul & Swetha") +
+      "&dates=" + ev.calStart + "/" + ev.calEnd +
+      "&location=" + encodeURIComponent(ev.venue + ", " + ev.address);
+    cal.target = "_blank"; cal.rel = "noopener";
+    acts.appendChild(map); acts.appendChild(cal);
+    card.appendChild(acts);
+    evBox.appendChild(card);
+  });
+
+  /* countdown */
+  var target = new Date(WEDDING_START).getTime();
+  var dEl = document.getElementById("cd-d"), hEl = document.getElementById("cd-h"), mEl = document.getElementById("cd-m");
+  function tick() {
+    var diff = target - Date.now();
+    if (diff < 0) diff = 0;
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    dEl.textContent = d; hEl.textContent = h; mEl.textContent = m;
+  }
+  tick();
+  setInterval(tick, 30000);
+
+  /* RSVP */
+  var btn = document.getElementById("rsvp-btn");
+  var form = document.getElementById("rsvp-form");
+  var thanks = document.getElementById("thanks");
+  var err = document.getElementById("rsvp-err");
+  var countField = document.getElementById("count-field");
+
+  var dl = document.getElementById("deadline");
+  var closed = RSVP_DEADLINE && Date.now() > new Date(RSVP_DEADLINE).getTime();
+  if (closed) {
+    btn.hidden = true;
+    dl.textContent = "RSVPs are now closed. Thank you to everyone who replied.";
+  } else if (RSVP_DEADLINE) {
+    dl.textContent = "Please reply by " + new Date(RSVP_DEADLINE).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/Chicago" });
+  }
+  if (RSVP_FORM_URL && !closed) {
+    var link = document.createElement("a");
+    link.className = btn.className; link.textContent = btn.textContent;
+    link.href = RSVP_FORM_URL; link.target = "_blank"; link.rel = "noopener";
+    btn.replaceWith(link);
+  }
+
+  var sb = document.getElementById("scroll-btn");
+  sb.addEventListener("click", function () {
+    document.getElementById("count-h").closest("section").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  });
+  function onScroll() { sb.classList.toggle("hide", window.scrollY > 320); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+  btn.addEventListener("click", function () {
+    var show = form.hidden;
+    form.hidden = !show;
+    btn.setAttribute("aria-expanded", String(show));
+    if (show) document.getElementById("rsvp-name").focus();
+  });
+  document.getElementById("reply-yes").addEventListener("change", function () { countField.hidden = false; });
+  document.getElementById("reply-no").addEventListener("change", function () { countField.hidden = true; });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = document.getElementById("rsvp-name").value.trim();
+    if (!name) { err.textContent = "Please add your name so we know who is replying."; document.getElementById("rsvp-name").focus(); return; }
+    err.textContent = "";
+    var yes = document.getElementById("reply-yes").checked;
+    var n = document.getElementById("rsvp-count").value;
+    var note = document.getElementById("rsvp-note").value.trim();
+    var msg = "RSVP for Rahul & Swetha's wedding (2 December 2026)\n" +
+      "Name: " + name + "\n" +
+      "Reply: " + (yes ? "Joyfully accepts" : "Regretfully declines") + "\n" +
+      (yes ? "Guests: " + n + "\n" : "") +
+      (note ? "Note: " + note : "");
+    msg = msg.replace(/\s+$/, "");
+
+    form.hidden = true;
+    btn.hidden = true;
+    thanks.hidden = false;
+    thanks.textContent = "";
+    thanks.appendChild(el("h3", "", "Thank you, " + name));
+    thanks.appendChild(el("p", "", yes
+      ? "One last step: send this reply to the couple so they can plan for you."
+      : "We will miss you. Please send this reply to the couple so they know."));
+    thanks.appendChild(el("div", "msgbox", msg));
+    var acts = el("div", "actions");
+    if (WHATSAPP_NUMBER) {
+      var wa = el("a", "btn solid", "Send on WhatsApp");
+      wa.href = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg);
+      wa.target = "_blank"; wa.rel = "noopener";
+      acts.appendChild(wa);
+    }
+    var cp = el("button", "btn" + (WHATSAPP_NUMBER ? "" : " solid"), "Copy reply");
+    cp.type = "button";
+    cp.addEventListener("click", function () {
+      function done() { cp.textContent = "Copied"; }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(thanks.querySelector(".msgbox"));
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        cp.textContent = "Selected, press copy";
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(msg).then(done, fallback);
+      } else { fallback(); }
+    });
+    acts.appendChild(cp);
+    thanks.appendChild(acts);
+    thanks.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+  });
+})();
+</script>
+</body>
+</html>
