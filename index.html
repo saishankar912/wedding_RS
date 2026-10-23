@@ -470,7 +470,7 @@ footer .band { height: 10px; margin-top: 34px; background:
   .rv { opacity: 1; transform: none; transition: none; }
   .bl, .flame, .glow, .petal, .p-gar .strand { animation: none; }
   .petal { display: none; }
-  .strand, .tap, .scroll-btn i, .bg-mandala, .tassel, .music-btn.playing svg { animation: none; }
+  .strand, .tap, .scroll-btn i, .bg-mandala, .tassel, .-btn.playing svg { animation: none; }
   .env-card, .env-flap, .env-seal, .env-btn, .intro, .tassel { transition-duration: .01s; transition-delay: 0s; }
 }
 </style>
@@ -539,7 +539,7 @@ footer .band { height: 10px; margin-top: 34px; background:
   <p class="tap" id="tap">Tap the envelope to open</p>
 </div>
 
-<button class="music-btn" id="music-btn" type="button" aria-label="Play music" aria-pressed="false" hidden>
+<button class="-btn" id="-btn" type="button" aria-label="Play " aria-pressed="false" hidden>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
     <path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>
     <line class="mute" x1="3" y1="3" x2="21" y2="21"/>
@@ -783,7 +783,7 @@ var PHOTOS = [];
 // BACKGROUND MUSIC: put your song file in the same folder as this page and write its name here,
 // e.g. var MUSIC_URL = "music.mp3";  It starts when the guest taps the envelope and loops
 // until they close the page. Guests can pause it with the round music button. Leave "" for no music.
-var MUSIC_URL = "";
+var MUSIC_URL = "music.mp3";
 
 // GOOGLE FORM RSVP: paste the full link "https://docs.google.com/forms/d/e/.../viewform".
 // In the form, add a Checkboxes question listing the celebrations so guests can pick.
